@@ -1,13 +1,13 @@
 package timer;
 
 /**
- * The chronometer class is composed of the three cyclic counters. We can count until 59 hours 59 minutes and 59
+ * The chronometer class is composed of the three cyclic counters. We can count until 24 hours 59 minutes and 59
  * seconds.
  * 
  * @author Tianxiao.Liu@u-cergy.fr
  **/
 public class Chronometer {
-	private CyclicCounter hour = new CyclicCounter(0, 24, 0);
+	private CyclicCounter hour = new CyclicCounter(0, 23, 0);
 	private CyclicCounter minute = new CyclicCounter(0, 59, 0);
 	private CyclicCounterFaster second = new CyclicCounterFaster(0, 50, 0);
 
