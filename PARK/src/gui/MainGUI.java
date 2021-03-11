@@ -23,6 +23,9 @@ import engine.map.Map;
 import engine.process.BatimentManager;
 import engine.process.GameBuilder;
 import engine.process.PersonneManager;
+import timer.Chronometer;
+import timer.CyclicCounter;
+import timer.CyclicCounterFaster;
 
 public class MainGUI extends JFrame implements Runnable {
 
@@ -38,13 +41,16 @@ public class MainGUI extends JFrame implements Runnable {
 
 	private PersonneManager managerPersonne;
 	private BatimentManager managerBatiment;
-
+	private Chronometer chronometer = new Chronometer();
+	private JLabel hourValue = new JLabel("");
+	private JLabel minuteValue = new JLabel("");
+	private JLabel secondValue = new JLabel("");
 	private GameDisplay dashboard;
 
 	JLabel argent = new JLabel("nbARGENT");
 	JLabel visiteur = new JLabel("nbVISITEUR");
 	JLabel note = new JLabel("NOTE");
-	JLabel heure = new JLabel("JJ:MM:AAAA HH:MM:SS");
+	JPanel heure = new JPanel();
 
 	public MainGUI(String title) {
 		super(title);
@@ -52,7 +58,8 @@ public class MainGUI extends JFrame implements Runnable {
 	}
 
 	private void init() {
-
+		
+		updateValues();
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 
@@ -78,6 +85,19 @@ public class MainGUI extends JFrame implements Runnable {
 		setResizable(false);
 		setLocationRelativeTo(null);
 	}
+	
+	private void updateValues() {
+		// This part is for textual time printing.
+		CyclicCounter hour = chronometer.getHour();
+		hourValue.setText(hour.toString() + " ");
+
+		CyclicCounter minute = chronometer.getMinute();
+		minuteValue.setText(minute.toString() + " ");
+
+		CyclicCounterFaster second = chronometer.getSecond();
+		secondValue.setText(second.toString() + " ");
+
+	}
 
 	@Override
 	public void run() {
@@ -87,7 +107,8 @@ public class MainGUI extends JFrame implements Runnable {
 			} catch (InterruptedException e) {
 				System.out.println(e.getMessage());
 			}
-
+			chronometer.increment();
+			updateValues();
 			managerPersonne.nextRound();
 			dashboard.repaint();
 		}
@@ -147,6 +168,9 @@ public class MainGUI extends JFrame implements Runnable {
 		top.add(note);
 		top.add(new JSeparator(SwingConstants.VERTICAL));
 		top.add(heure);
+		heure.add(hourValue);
+		heure.add(minuteValue);
+		heure.add(secondValue);
 		top.add(new JSeparator(SwingConstants.VERTICAL));
 		JButton btn = new JButton("menu");
 		top.add(btn);
